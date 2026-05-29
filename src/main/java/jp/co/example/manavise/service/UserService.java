@@ -21,10 +21,6 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    /**
-     * Spring Security から呼ばれる認証用メソッド。
-     * loginId でユーザーを検索し、CustomUserDetails を返す。
-     */
     @Override
     public CustomUserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
         User user = userRepository.findByLoginId(loginId)
