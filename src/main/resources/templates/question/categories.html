@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>カテゴリー選択 — ManaVise</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+    <link rel="stylesheet" th:href="@{/css/common.css}" />
+    <style>
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .cat-card {
+            background: var(--mv-surface);
+            border: 1px solid var(--mv-border);
+            border-radius: var(--mv-radius-lg);
+            padding: 28px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--mv-text);
+            display: block;
+            transition: border-color 0.15s, transform 0.12s, box-shadow 0.15s;
+        }
+
+        .cat-card:hover {
+            border-color: var(--mv-green);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(29, 158, 117, 0.1);
+            color: var(--mv-text);
+        }
+
+        .cat-icon {
+            font-size: 32px;
+            color: var(--mv-green);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .cat-name {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .cat-count {
+            font-size: 12px;
+            color: var(--mv-text-muted);
+        }
+
+        .cat-arrow {
+            margin-top: 14px;
+            font-size: 16px;
+            color: var(--mv-green);
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .cat-card:hover .cat-arrow {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="~{layout/header :: navbar}"></div>
+
+    <main class="mv-page">
+        <div class="mv-page-header">
+            <h1>カテゴリー選択</h1>
+            <p class="sub">取り組むカテゴリーを選んでください</p>
+        </div>
+
+        <div class="cat-grid">
+            <a th:each="category : ${categories}" th:href="@{/question/list(categoryId=${category.categoryId})}"
+                class="cat-card">
+                <div class="cat-name" th:text="${category.categoryName}">数学</div>
+                <!-- <div class="cat-count" th:text="|${category.questionCount}問|">12問</div> -->
+                <div class="cat-arrow"><i class="ti ti-arrow-right" aria-hidden="true"></i></div>
+            </a>
+        </div>
+    </main>
+
+</body>
+
+</html>

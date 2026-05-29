@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>問題登録 — ManaVise</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+    <link rel="stylesheet" th:href="@{/css/common.css}" />
+    <style>
+        .type-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .type-tab {
+            padding: 8px 20px;
+            border-radius: 8px;
+            border: 1.5px solid var(--mv-border);
+            background: var(--mv-surface);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--mv-text-muted);
+            transition: all 0.15s;
+        }
+
+        .type-tab.active {
+            border-color: var(--mv-green);
+            background: var(--mv-green-light);
+            color: var(--mv-green-dark);
+        }
+
+        .choice-input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border: 1px solid var(--mv-border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: var(--mv-surface);
+        }
+
+        .choice-input-row input[type="text"] {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 13px;
+            background: transparent;
+        }
+
+        .choice-label {
+            font-size: 11px;
+            color: var(--mv-text-muted);
+            white-space: nowrap;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div th:replace="~{layout/header :: navbar}"></div>
+
+    <main class="mv-page">
+
+        <div class="mv-breadcrumb">
+            <a th:href="@{/admin/questions}">問題管理</a>
+            <i class="ti ti-chevron-right" style="font-size:11px" aria-hidden="true"></i>
+            <span>新規登録</span>
+        </div>
+
+        <div class="mv-page-header">
+            <h1>問題を登録</h1>
+            <p class="sub">問題形式を選んで登録してください</p>
+        </div>
+
+        <div class="mv-card" style="max-width:680px">
+
+            <form th:action="@{/admin/questions/new}" th:object="${questionForm}" method="post">
+
+                <div class="mv-alert danger" th:if="${#fields.hasErrors('*')}">
+                    入力内容にエラーがあります。確認してください。
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+                    <div class="mv-form-row" style="margin:0">
+                        <label>問題番号 <span class="req">*</span></label>
+                        <input type="number" th:field="*{questionNumber}" class="mv-input" placeholder="例: 6" min="1" />
+                    </div>
+                    <div class="mv-form-row" style="margin:0">
+                        <label>カテゴリー <span class="req">*</span></label>
+                        <select th:field="*{categoryId}" class="mv-select">
+                            <option value="">選択してください</option>
+                            <option th:each="cat : ${categories}" th:value="${cat.categoryId}"
+                                th:text="${cat.categoryName}">数学</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mv-form-row">
+                    <label>問題内容 <span class="req">*</span></label>
+                    <textarea th:field="*{questionContent}" class="mv-textarea" placeholder="問題文を入力してください"></textarea>
+                </div>
+
+                <div class="mv-form-row">
+                    <label>問題形式 <span class="req">*</span></label>
+                    <div class="type-tabs">
+                        <button type="button" class="type-tab active" onclick="switchType(1, this)">
+                            <i class="ti ti-pencil"></i> 記述式
+                        </button>
+                        <button type="button" class="type-tab" onclick="switchType(2, this)">
+                            <i class="ti ti-list-check"></i> 4択
+                        </button>
+                        <button type="button" class="type-tab" onclick="switchType(3, this)">
+                            <i class="ti ti-circle-check"></i> ○×
+                        </button>
+                    </div>
+                    <input type="hidden" th:field="*{questionType}" id="questionTypeInput" />
+                </div>
+
+                <div id="section-1" class="section active">
+                    <div class="mv-form-row">
+                        <label>正解 <span class="req">*</span></label>
+                        <input type="text" th:field="*{answer}" class="mv-input" placeholder="正解を入力してください" />
+                    </div>
+                </div>
+
+                <div id="section-2" class="section">
+                    <div class="mv-form-row">
+                        <label>選択肢 <span class="req">*</span>
+                            <span style="font-size:11px;font-weight:400;color:var(--mv-text-muted)">—
+                                正解を選んでください（1つ）</span>
+                        </label>
+                        <div th:each="i : ${#numbers.sequence(0, 3)}">
+                            <div class="choice-input-row">
+                                <input type="hidden" th:name="|choices[${i}].choiceOrder|" th:value="${i + 1}" />
+                                <input type="hidden" th:name="|choices[${i}].correct|" th:id="|multiCorrect${i}|"
+                                    value="false" />
+                                <span class="choice-label" th:text="${'ABCD'.charAt(i)}">A</span>
+                                <input type="text" th:name="|choices[${i}].choiceText|" placeholder="選択肢を入力" />
+                                <span class="choice-label">正解</span>
+                                <input type="radio" name="correctChoiceIndex" th:value="${i}"
+                                    th:onchange="|updateMultiCorrect(${i})|"
+                                    style="accent-color:var(--mv-green);width:16px;height:16px" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:10px;margin-top:8px">
+                    <a th:href="@{/admin/questions}" class="mv-btn">
+                        <i class="ti ti-x"></i> キャンセル
+                    </a>
+                    <button type="submit" class="mv-btn primary">
+                        <i class="ti ti-check"></i> 登録する
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // タブ切り替え
+        function switchType(type, btn) {
+            document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('section-' + type).classList.add('active');
+            document.getElementById('questionTypeInput').value = type;
+        }
+
+        // 4択: 選ばれた行の correct を true、他を false にする
+        function updateMultiCorrect(selectedIndex) {
+            for (let i = 0; i < 4; i++) {
+                document.getElementById('multiCorrect' + i).value = (i === selectedIndex) ? 'true' : 'false';
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>生徒管理 — ManaVise</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+    <link rel="stylesheet" th:href="@{/css/common.css}" />
+</head>
+
+<body>
+
+    <div th:replace="~{layout/header :: navbar}"></div>
+
+    <main class="mv-page">
+
+        <div class="mv-page-header">
+            <h1>生徒管理</h1>
+            <p class="sub">生徒ごとの学習状況を確認できます</p>
+        </div>
+
+
+        <div class="d-flex justify-content-end mb-4">
+            <a th:href="@{/admin/students/new}" class="mv-btn primary" method="get">
+                <i class="ti ti-plus" aria-hidden="true"></i> 新規登録
+            </a>
+        </div>
+
+        <div class="mv-table-wrap">
+            <table class="mv-table">
+                <thead>
+                    <tr>
+                        <th style="width:80px">ID</th>
+                        <th>氏名</th>
+                        <th style="width:160px">ログインID</th>
+                        <th style="width:100px">権限</th>
+                        <th style="width:140px">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}">
+                        <td style="color:var(--mv-text-muted)" th:text="|#${user.userId}|">#1</td>
+                        <td>
+                            <div style="display:flex;align-items:center;gap:10px">
+                                <div class="mv-avatar" style="flex-shrink:0"
+                                    th:text="${#strings.length(user.userName) > 2 ? #strings.substring(user.userName,0,2) : user.userName}">
+                                    田中</div>
+                                <span th:text="${user.userName}">田中 花子</span>
+                            </div>
+                        </td>
+                        <td style="color:var(--mv-text-muted);font-family:monospace" th:text="${user.loginId}">hanako
+                        </td>
+                        <td>
+                            <span th:if="${user.roleId == 1}" class="mv-badge role-a">管理者</span>
+                            <span th:if="${user.roleId == 2}" class="mv-badge role-s">一般</span>
+                        </td>
+                        <td>
+                            <th:block th:if="${user.roleId == 2}">
+                                <a th:href="@{/history/admin/students(userId=${user.userId})}" class="mv-btn sm"
+                                    method="get">
+                                    <i class="ti ti-history" aria-hidden="true"></i> 履歴確認
+                                </a>
+                            </th:block>
+                            <span th:if="${user.roleId == 1}" style="font-size:12px;color:var(--mv-text-muted)">—</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

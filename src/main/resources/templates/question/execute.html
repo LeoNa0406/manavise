@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>問題実施 — ManaVise</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+    <link rel="stylesheet" th:href="@{/css/common.css}" />
+    <style>
+        .q-block {
+            background: var(--mv-surface);
+            border: 1px solid var(--mv-border);
+            border-radius: var(--mv-radius-lg);
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .q-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--mv-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .q-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--mv-text);
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        .q-answer-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .q-answer-row .mv-input {
+            font-size: 15px;
+            padding: 11px 14px;
+        }
+
+        /* 4択 */
+        .choice-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .choice-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border: 1.5px solid var(--mv-border);
+            border-radius: var(--mv-radius);
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .choice-item:has(input:checked) {
+            border-color: var(--mv-green);
+            background: var(--mv-green-light);
+        }
+
+        .choice-item input[type="radio"] {
+            accent-color: var(--mv-green);
+            width: 18px;
+            height: 18px;
+        }
+
+        .choice-item label {
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0;
+            flex: 1;
+        }
+
+        .ox-row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .ox-btn {
+            flex: 1;
+            padding: 20px;
+            border: 2px solid var(--mv-border);
+            border-radius: var(--mv-radius-lg);
+            background: var(--mv-surface);
+            font-size: 28px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: border-color 0.15s, background 0.15s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .ox-btn:has(input:checked) {
+            transform: scale(1.02);
+        }
+
+        .ox-btn.maru:has(input:checked) {
+            border-color: var(--mv-green);
+            background: var(--mv-green-light);
+            color: var(--mv-green-dark);
+        }
+
+        .ox-btn.batsu:has(input:checked) {
+            border-color: var(--mv-danger);
+            background: var(--mv-danger-light);
+            color: #A32D2D;
+        }
+
+        .ox-btn input[type="radio"] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div th:replace="~{layout/header :: navbar}"></div>
+
+    <main class="mv-page">
+
+        <div class="mv-breadcrumb">
+            <a th:href="@{/question/categories}">ホーム</a>
+            <i class="ti ti-chevron-right" style="font-size:11px" aria-hidden="true"></i>
+            <a th:href="@{/question/list(categoryId=${category.categoryId})}" th:text="${category.categoryName}">数学</a>
+            <i class="ti ti-chevron-right" style="font-size:11px" aria-hidden="true"></i>
+            <span>問題実施</span>
+        </div>
+
+        <div class="mv-page-header">
+            <h1 style="font-size:18px">問題を解く</h1>
+            <span th:switch="${question.questionType}">
+                <span th:case="1" class="q-type-badge free">記述式</span>
+                <span th:case="2" class="q-type-badge choice">4択</span>
+                <span th:case="3" class="q-type-badge truefalse">記述式</span>
+            </span>
+            <p class="sub" th:text="|${category.categoryName} — No.${question.questionNumber}|">数学 — No.2</p>
+        </div>
+
+        <div class="q-block">
+            <div class="q-label" th:text="|問題 No.${question.questionNumber}|">問題 No.2</div>
+            <div class="q-text" th:text="${question.questionContent}">√144 の値を答えなさい</div>
+
+            <form th:action="@{/question/answer}" th:object="${answerForm}" method="post">
+                <input type="hidden" th:field="*{questionId}" />
+                <input type="hidden" th:field="*{categoryId}" />
+
+                <div th:if="${question.questionType==1}" class="q-answer-row">
+                    <input type="text" th:field="*{userAnswer}" th:placeholder="回答を入力してください..." class="mv-input"
+                        autofocus required />
+                    <button type="submit" class="mv-btn primary" style="white-space:nowrap">
+                        <i class="ti ti-send" aria-hidden="true"></i> 回答する
+                    </button>
+                </div>
+
+                <div th:if="${question.questionType == 2}">
+                    <div class="choice-list" style="margin-bottom:20px">
+                        <label class="choice-item" th:each="choice, stat : ${choices}">
+                            <input type="radio" th:name="userAnswer" th:value="${choice.choiceText}" required />
+                            <!-- 選択肢番号: A B C D -->
+                            <span style="font-size:13px;font-weight:700;color:var(--mv-text-muted);width:20px"
+                                th:text="${'ABCD'.charAt(stat.index)}">A</span>
+                            <label th:text="${choice.choiceText}" style="cursor:pointer;margin:0">選択肢テキスト</label>
+                        </label>
+                    </div>
+                    <button type="submit" class="mv-btn primary">
+                        <i class="ti ti-send" aria-hidden="true"></i> 回答する
+                    </button>
+                </div>
+
+                <div th:if="${question.questionType == 3}">
+                    <div class="ox-row" style="margin-bottom:20px">
+                        <label class="ox-btn maru">
+                            <input type="radio" name="userAnswer" value="○" required />
+                            <span>○</span>
+                        </label>
+                        <label class="ox-btn batsu">
+                            <input type="radio" name="userAnswer" value="×" required />
+                            <span>×</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="mv-btn primary">
+                        <i class="ti ti-send" aria-hidden="true"></i> 回答する
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <div>
+            <a th:href="@{/question/list(categoryId=${category.categoryId})}" class="mv-btn">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i> 問題一覧に戻る
+            </a>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+    <nav class="mv-navbar" th:fragment="navbar">
+
+        <a class="mv-brand">Mana<span>Vise</span></a>
+
+        <div sec:authorize="hasRole('USER')" style="display:flex;gap:4px;margin-left:16px">
+            <a class="mv-nav-link" th:href="@{/question/categories}"
+                th:classappend="${currentPage=='categories'} ? 'active'">
+                <i class="ti ti-books" aria-hidden="true"></i> 問題を解く
+            </a>
+            <a class="mv-nav-link" th:href="@{/history/my}" th:classappend="${currentPage=='myhistory'} ? 'active'">
+                <i class="ti ti-history" aria-hidden="true"></i> 学習履歴
+            </a>
+        </div>
+
+        <div sec:authorize="hasRole('ADMIN')" style="display:flex;gap:4px;margin-left:16px">
+            <a class="mv-nav-link" th:href="@{/admin/questions}"
+                th:classappend="${currentPage=='admin-questions'} ? 'active'">
+                <i class="ti ti-clipboard-list" aria-hidden="true"></i> 問題管理
+            </a>
+            <a class="mv-nav-link" th:href="@{/admin/students}"
+                th:classappend="${currentPage=='admin-students'} ? 'active'">
+                <i class="ti ti-users" aria-hidden="true"></i> 生徒管理
+            </a>
+        </div>
+
+        <div style="margin-left:auto;display:flex;align-items:center;gap:12px">
+            <span sec:authorize="hasRole('ADMIN')"
+                style="font-size:11px;padding:3px 9px;border-radius:20px;background:#EAF3DE;color:#3B6D11;font-weight:700">
+                管理者
+            </span>
+            <span sec:authorize="hasRole('USER')"
+                style="font-size:11px;padding:3px 9px;border-radius:20px;background:#E6F1FB;color:#185FA5;font-weight:700">
+                一般
+            </span>
+
+            <div
+                style="display:flex;align-items:center;gap:8px;padding:4px 10px;border:1px solid var(--mv-border);border-radius:8px;background:var(--mv-surface)">
+                <div class="mv-avatar" sec:authorize="hasRole('ADMIN')" style="background:#EAF3DE;color:#3B6D11">管</div>
+                <div class="mv-avatar" sec:authorize="hasRole('USER')">
+                </div>
+                <span style="font-size:13px;color:var(--mv-text-muted)" th:text="${userName}">田中 花子</span>
+            </div>
+
+            <form th:action="@{/auth/logout}" method="post" style="margin:0">
+                <button type="submit" class="mv-btn sm">
+                    <i class="ti ti-logout" aria-hidden="true"></i> ログアウト
+                </button>
+            </form>
+        </div>
+    </nav>
+</body>
+
+</html>

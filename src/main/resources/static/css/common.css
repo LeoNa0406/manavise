@@ -1,0 +1,332 @@
+/* ========================================
+   ManaVise — 共通スタイル
+   Bootstrap 5 + カスタムオーバーライド
+======================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap");
+
+:root {
+  --mv-green: #1d9e75;
+  --mv-green-dark: #0f6e56;
+  --mv-green-light: #e1f5ee;
+  --mv-green-muted: #9fe1cb;
+  --mv-danger: #e24b4a;
+  --mv-danger-light: #fcebeb;
+  --mv-text: #1a1a1a;
+  --mv-text-muted: #6b7280;
+  --mv-border: #e5e7eb;
+  --mv-bg: #f9fafb;
+  --mv-surface: #ffffff;
+  --mv-radius: 10px;
+  --mv-radius-lg: 14px;
+  --nav-h: 56px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Noto Sans JP", sans-serif;
+  background: var(--mv-bg);
+  color: var(--mv-text);
+  min-height: 100vh;
+  font-size: 14px;
+}
+
+/* ---- Navbar ---- */
+.mv-navbar {
+  height: var(--nav-h);
+  background: var(--mv-surface);
+  border-bottom: 1px solid var(--mv-border);
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.mv-brand {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--mv-text);
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+.mv-brand span {
+  color: var(--mv-green);
+}
+
+.mv-nav-link {
+  font-size: 13px;
+  color: var(--mv-text-muted);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.mv-nav-link:hover,
+.mv-nav-link.active {
+  background: var(--mv-green-light);
+  color: var(--mv-green-dark);
+  font-weight: 500;
+}
+
+.mv-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--mv-green-light);
+  color: var(--mv-green-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+.mv-avatar.admin {
+  background: #eaf3de;
+  color: #3b6d11;
+}
+
+/* ---- Page wrapper ---- */
+.mv-page {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 32px 28px;
+}
+
+/* ---- Page header ---- */
+.mv-page-header {
+  margin-bottom: 24px;
+}
+.mv-page-header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--mv-text);
+  margin: 0 0 4px;
+}
+.mv-page-header .sub {
+  font-size: 13px;
+  color: var(--mv-text-muted);
+  margin: 0;
+}
+
+/* ---- Breadcrumb ---- */
+.mv-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--mv-text-muted);
+  margin-bottom: 16px;
+}
+.mv-breadcrumb a {
+  color: var(--mv-text-muted);
+  text-decoration: none;
+}
+.mv-breadcrumb a:hover {
+  color: var(--mv-green);
+}
+
+/* ---- Card ---- */
+.mv-card {
+  background: var(--mv-surface);
+  border: 1px solid var(--mv-border);
+  border-radius: var(--mv-radius-lg);
+  padding: 24px;
+}
+
+/* ---- Table ---- */
+.mv-table-wrap {
+  background: var(--mv-surface);
+  border: 1px solid var(--mv-border);
+  border-radius: var(--mv-radius-lg);
+  overflow: hidden;
+}
+.mv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.mv-table thead th {
+  background: #f3f4f6;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--mv-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--mv-border);
+}
+.mv-table tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--mv-border);
+  vertical-align: middle;
+}
+.mv-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.mv-table tbody tr:hover td {
+  background: #f9fafb;
+}
+
+/* ---- Metric cards ---- */
+.mv-metric {
+  background: var(--mv-surface);
+  border: 1px solid var(--mv-border);
+  border-radius: var(--mv-radius);
+  padding: 16px 20px;
+}
+.mv-metric .label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--mv-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.mv-metric .val {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--mv-text);
+  line-height: 1;
+}
+
+/* ---- Buttons ---- */
+.mv-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--mv-border);
+  background: var(--mv-surface);
+  color: var(--mv-text);
+  font-size: 13px;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background 0.12s,
+    border-color 0.12s;
+}
+.mv-btn:hover {
+  background: #f3f4f6;
+}
+.mv-btn.primary {
+  background: var(--mv-green);
+  color: #fff;
+  border-color: var(--mv-green);
+}
+.mv-btn.primary:hover {
+  background: var(--mv-green-dark);
+  border-color: var(--mv-green-dark);
+}
+.mv-btn.danger {
+  background: var(--mv-danger);
+  color: #fff;
+  border-color: var(--mv-danger);
+}
+.mv-btn.danger:hover {
+  background: #a32d2d;
+  border-color: #a32d2d;
+}
+.mv-btn.sm {
+  padding: 5px 12px;
+  font-size: 12px;
+}
+
+/* ---- Badges ---- */
+.mv-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.mv-badge.cat {
+  background: var(--mv-green-light);
+  color: var(--mv-green-dark);
+}
+.mv-badge.ok {
+  background: #eaf3de;
+  color: #3b6d11;
+}
+.mv-badge.ng {
+  background: var(--mv-danger-light);
+  color: #a32d2d;
+}
+.mv-badge.del {
+  background: #f3f4f6;
+  color: #9ca3af;
+  text-decoration: line-through;
+}
+.mv-badge.role-s {
+  background: #e6f1fb;
+  color: #185fa5;
+}
+.mv-badge.role-a {
+  background: #eaf3de;
+  color: #3b6d11;
+}
+
+/* ---- Form ---- */
+.mv-form-row {
+  margin-bottom: 18px;
+}
+.mv-form-row label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--mv-text-muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.mv-form-row .req {
+  color: var(--mv-danger);
+  margin-left: 2px;
+}
+.mv-input,
+.mv-select,
+.mv-textarea {
+  width: 100%;
+  padding: 9px 13px;
+  border: 1px solid var(--mv-border);
+  border-radius: 8px;
+  background: var(--mv-surface);
+  color: var(--mv-text);
+  font-size: 13px;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+.mv-input:focus,
+.mv-select:focus,
+.mv-textarea:focus {
+  outline: none;
+  border-color: var(--mv-green);
+  box-shadow: 0 0 0 3px rgba(29, 158, 117, 0.12);
+}
+.mv-textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+/* ---- Alert / validation error ---- */
+.mv-alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+.mv-alert.danger {
+  background: var(--mv-danger-light);
+  color: #a32d2d;
+  border: 1px solid #f7c1c1;
+}

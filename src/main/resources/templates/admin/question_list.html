@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>問題管理 — ManaVise</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+    <link rel="stylesheet" th:href="@{/css/common.css}" />
+    <style>
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar .spacer {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div th:replace="~{layout/header :: navbar}"></div>
+
+    <main class="mv-page">
+
+        <div class="mv-page-header">
+            <h1>問題管理</h1>
+            <p class="sub">問題の登録・編集・削除を行います</p>
+        </div>
+
+        <div class="toolbar">
+            <form th:action="@{/admin/questions}" method="get" style="display:flex;gap:8px;align-items:center">
+                <select name="categoryId" class="mv-select" style="width:180px" onchange="this.form.submit()">
+                    <option value="">すべてのカテゴリー</option>
+                    <option th:each="cat : ${categories}" th:value="${cat.categoryId}" th:text="${cat.categoryName}"
+                        th:selected="${cat.categoryId == selectedCategoryId}">
+                        カテゴリー名
+                    </option>
+                </select>
+            </form>
+
+            <div class="spacer"></div>
+
+            <a th:href="@{/admin/questions/new}" class="mv-btn primary">
+                <i class="ti ti-plus" aria-hidden="true"></i> 新規登録
+            </a>
+        </div>
+
+        <div class="mv-table-wrap">
+            <table class="mv-table">
+                <thead>
+                    <tr>
+                        <th style="width:60px">No.</th>
+                        <th>問題内容</th>
+                        <th style="width:120px">カテゴリー</th>
+                        <th style="width:80px">状態</th>
+                        <th style="width:160px">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="question : ${questions}" th:styleappend="${question.isDeleted} ? 'opacity:0.5'">
+                        <td th:text="${question.questionNumber}">1</td>
+                        <td th:text="${question.questionContent}"
+                            th:styleappend="${question.isDeleted} ? 'text-decoration:line-through;color:var(--mv-text-muted)'">
+                            2 + 3 × 4 を計算しなさい</td>
+                        <td>
+                            <span class="mv-badge cat" th:each="cat : ${categories}"
+                                th:if="${cat.categoryId == question.categoryId}" th:text="${cat.categoryName}">
+                                数学
+                            </span>
+                        </td>
+                        <td>
+                            <span th:if="${!question.isDeleted}" class="mv-badge ok">有効</span>
+                            <span th:if="${question.isDeleted}" class="mv-badge del">無効</span>
+                        </td>
+                        <td style="white-space:nowrap;display:flex;gap:6px">
+                            <th:block th:if="${!question.isDeleted}">
+                                <a th:href="@{/admin/questions/{id}/edit(id=${question.questionId})}" class="mv-btn sm">
+                                    <i class="ti ti-edit" aria-hidden="true"></i> 編集
+                                </a>
+                                <form th:action="@{/admin/questions/{id}/delete(id=${question.questionId})}"
+                                    method="post" style="margin:0" onsubmit="return confirm('この問題を削除しますか？')">
+                                    <button type="submit" class="mv-btn sm danger">
+                                        <i class="ti ti-trash" aria-hidden="true"></i> 削除
+                                    </button>
+                                </form>
+                            </th:block>
+                            <span th:if="${question.deleted}"
+                                style="font-size:12px;color:var(--mv-text-muted)">削除済み</span>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+</body>
+
+</html>
