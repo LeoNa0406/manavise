@@ -45,6 +45,6 @@ public class HistoryController {
         List<HistoryViewDto> historyList = historyService.getHistoryByUser(userId);
         model.addAttribute("historyList", historyList);
         model.addAttribute("targetUser", userService.findById(userId));
-        return "/admin/student_history"; // TODO: "admin/student_history" を返す
+        return "admin/student_history"; // TODO: "admin/student_history" を返す
     }
 }
