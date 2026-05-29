@@ -4,7 +4,6 @@ import jp.co.example.manavise.model.entity.User;
 import jp.co.example.manavise.repository.UserRepository;
 import jp.co.example.manavise.security.CustomUserDetails;
 import jp.co.example.manavise.model.form.StudentForm;
-import lombok.experimental.var;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,7 +31,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりません"));
 
         String roleName = (user.getRoleId() == 1) ? "ROLE_ADMIN" : "ROLE_USER";
-        var authorities = List.of(new SimpleGrantedAuthority(roleName));
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(roleName));
         return new CustomUserDetails(user, authorities);
     }
 
