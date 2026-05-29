@@ -34,7 +34,7 @@ public class HistoryController {
         Integer userId = userDetails.getUser().getUserId();
         List<HistoryViewDto> historyList = historyService.getHistoryByUser(userId);
         model.addAttribute("historyList", historyList);
-        return "/history/my_history"; // TODO: "history/my_history" を返す
+        return "history/my_history"; // TODO: "history/my_history" を返す
     }
 
     // GET /history/admin/students/{userId}

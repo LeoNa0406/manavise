@@ -1,10 +1,5 @@
 DROP DATABASE IF EXISTS manavise_db;
 
-CREATE DATABASE manavise_db;
-+++++
-
-USE manavise_db;
-
 DROP TABLE IF EXISTS choices;
 DROP TABLE IF EXISTS answer_histories;
 DROP TABLE IF EXISTS quiz_histories;
@@ -12,6 +7,11 @@ DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;
+
+CREATE DATABASE manavise_db;
++++++
+
+USE manavise_db;
 
 
 CREATE TABLE roles (
